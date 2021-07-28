@@ -9,15 +9,23 @@ namespace Paymentsense.Coding.Challenge.Api.Services
     public class CountryService : ICountryService
     {
         private readonly ICountryClient _countryClient;
+        private readonly ISimpleCache<List<Country>> _simpleCache;
+        private const string CountryKey = "Countries";
 
-        public CountryService(ICountryClient countryClient)
+        public CountryService(ICountryClient countryClient, ISimpleCache<List<Country>> simpleCache)
         {
             _countryClient = countryClient;
+            _simpleCache = simpleCache;
         }
 
         public async Task<List<Country>> GetCountries(PageInfo pageInfo)
         {
-            var countries = await _countryClient.GetCountries();
+            var countries = _simpleCache.Get(CountryKey);
+            if (countries == null)
+            {
+                countries = await _countryClient.GetCountries();
+                _simpleCache.Set(CountryKey, countries);
+            }
 
             if (pageInfo == null)
             {
