@@ -94,9 +94,9 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
             _simpleCacheMock.Setup(x => x.Get(It.IsAny<string>())).Returns(() => _countryListFixture.Countries);
             var countryService = new CountryService(_countryClientMock.Object, _simpleCacheMock.Object);
 
-            var prevResult = await countryService.GetCountries(new PageInfo { Page = 2, PageNumber = 1 });
-            var result = await countryService.GetCountries(new PageInfo { Page = 2, PageNumber = 2 });
-            var nextResult = await countryService.GetCountries(new PageInfo { Page = 2, PageNumber = 3 });
+            var prevResult = await countryService.GetCountries(new PageInfo { Page = 1, PageSize = 2 });
+            var result = await countryService.GetCountries(new PageInfo { Page = 2, PageSize = 2 });
+            var nextResult = await countryService.GetCountries(new PageInfo { Page = 3, PageSize = 2 });
 
             prevResult.Should().BeOfType<List<Country>>();
             prevResult.Should().HaveCount(2);

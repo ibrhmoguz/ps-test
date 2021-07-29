@@ -40,12 +40,12 @@ namespace Paymentsense.Coding.Challenge.Api.Services
             }
 
             pageInfo.Page ??= 1;
-            pageInfo.PageNumber ??= 1;
+            pageInfo.PageSize ??= 1;
 
-            var skipCount = pageInfo.Page.Value * pageInfo.PageNumber.Value;
-            return pageInfo.PageNumber == 1
-                ? countries.Take(pageInfo.Page.Value).ToList()
-                : countries.Skip(skipCount).Take(pageInfo.Page.Value).ToList();
+            var skipCount = pageInfo.Page.Value * pageInfo.PageSize.Value;
+            return pageInfo.Page == 1
+                ? countries.Take(pageInfo.PageSize.Value).ToList()
+                : countries.Skip(skipCount).Take(pageInfo.PageSize.Value).ToList();
         }
     }
 }
