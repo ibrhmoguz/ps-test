@@ -10,7 +10,7 @@ using Paymentsense.Coding.Challenge.Api.Models;
 
 namespace Paymentsense.Coding.Challenge.Api.Client
 {
-    internal class CountryClient : ICountryClient
+    public class CountryClient : ICountryClient
     {
         private readonly HttpClient _client;
         private readonly IConfiguration _configuration;

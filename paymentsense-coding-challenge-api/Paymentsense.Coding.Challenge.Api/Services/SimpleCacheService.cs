@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Paymentsense.Coding.Challenge.Api.Interfaces;
 
 namespace Paymentsense.Coding.Challenge.Api.Services
@@ -19,12 +18,15 @@ namespace Paymentsense.Coding.Challenge.Api.Services
             return entry;
         }
 
-        public void Set(object key, T entry)
+        public bool Set(object key, T entry)
         {
-            if (!_memoryCache.TryGetValue(key, out _))
+            if (_memoryCache.TryGetValue(key, out _))
             {
-                _memoryCache.Set(key, entry);
+                return false;
             }
+
+            _memoryCache.Set(key, entry);
+            return true;
         }
     }
 }
