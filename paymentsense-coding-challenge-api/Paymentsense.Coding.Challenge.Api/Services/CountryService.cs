@@ -24,7 +24,14 @@ namespace Paymentsense.Coding.Challenge.Api.Services
             if (countries == null)
             {
                 countries = await _countryClient.GetCountries();
-                _simpleCache.Set(CountryKey, countries);
+                if (countries != null && countries.Any())
+                {
+                    _simpleCache.Set(CountryKey, countries);
+                }
+                else
+                {
+                    return null;
+                }
             }
 
             if (pageInfo == null)
@@ -36,7 +43,9 @@ namespace Paymentsense.Coding.Challenge.Api.Services
             pageInfo.PageNumber ??= 1;
 
             var skipCount = pageInfo.Page.Value * pageInfo.PageNumber.Value;
-            return countries.Skip(skipCount).Take(pageInfo.PageNumber.Value).ToList();
+            return pageInfo.PageNumber == 1
+                ? countries.Take(pageInfo.Page.Value).ToList()
+                : countries.Skip(skipCount).Take(pageInfo.Page.Value).ToList();
         }
     }
 }

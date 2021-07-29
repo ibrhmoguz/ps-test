@@ -33,9 +33,10 @@ namespace Paymentsense.Coding.Challenge.Api
                 });
             });
 
-            services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<ICountryClient, CountryClient>();
             services.AddTransient(typeof(ISimpleCache<>),typeof(SimpleCacheService<>));
+            services.AddTransient<ICountryService, CountryService>();
+
             services.AddHttpClient();
         }
 
