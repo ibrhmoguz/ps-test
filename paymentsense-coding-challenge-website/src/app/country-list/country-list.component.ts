@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Country } from "../models/country";
 import { Subject, of, Subscription } from "rxjs";
 import { takeUntil, tap, catchError, finalize } from "rxjs/operators";
@@ -39,35 +39,33 @@ export class CountryListComponent implements OnInit {
   private unsubscribe$ = new Subject<boolean>();
   expandedElement: Country | null;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  private subs = new Subscription();
 
-  constructor(private countryService: CountryService) {}
+  constructor(public countryService: CountryService) {}
 
   ngOnInit(): void {
     this.getCountryList({ page: 1, pageSize: 10 });
+    console.log(this.paginatedResult);
   }
 
   getCountryList(pageInfo: any): void {
     this.loading = true;
-    this.subs.add(
-      this.countryService
-        .getCountryList(pageInfo)
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          tap((data: PaginatedResult) => {
-            this.paginatedResult = data;
-            this.countryList.data = data.countries;
-          }),
-          catchError((error: any) => {
-            console.error(error);
-            return of();
-          }),
-          finalize(() => {
-            this.loading = false;
-          })
-        )
-        .subscribe()
-    );
+    this.countryService
+      .getCountryList(pageInfo)
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        tap((data: PaginatedResult) => {
+          this.paginatedResult = data;
+          this.countryList.data = data.countries;
+        }),
+        catchError((error: any) => {
+          console.error(error);
+          return of();
+        }),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe();
   }
 
   getCurrencies(currencies: Currency[]): string {

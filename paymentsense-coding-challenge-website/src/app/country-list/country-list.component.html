@@ -1,8 +1,5 @@
 <div *ngIf="loading">
-  <div
-    class="col-md-12 text-center"
-    *ngIf="paginatedResult?.countries?.length === 0"
-  >
+  <div class="col-md-12 text-center">
     <p>Loading...</p>
   </div>
 </div>
@@ -70,7 +67,8 @@
         class="country-detail-row"
       ></tr>
     </table>
-    <mat-paginator #paginator
+    <mat-paginator
+      #paginator
       [pageSize]="10"
       [length]="paginatedResult?.total"
       [pageSizeOptions]="[5, 10, 20]"
