@@ -1,0 +1,24 @@
+table {
+  width: 100%;
+}
+
+tr.country-detail-row {
+  height: 0;
+}
+
+tr.country-element-row:not(.country-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.country-element-row:not(.country-expanded-row):active {
+  background: #efefef;
+}
+
+.country-element-row td {
+  border-bottom-width: 0;
+}
+
+.country-element-detail {
+  overflow: hidden;
+  display: flex;
+}

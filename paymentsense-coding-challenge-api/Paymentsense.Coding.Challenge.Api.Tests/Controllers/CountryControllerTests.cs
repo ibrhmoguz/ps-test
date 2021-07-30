@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -25,7 +24,11 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Controllers
         [Fact]
         public async void Get_OnInvoke_ReturnsCountryList()
         {
-            _countryServiceMock.Setup(c => c.GetCountries(null)).ReturnsAsync(_countryListFixture.Countries);
+            var paginatedResult = new PaginatedResult
+            {
+                Countries = _countryListFixture.Countries,
+            };
+            _countryServiceMock.Setup(c => c.GetCountries(null)).ReturnsAsync(() => paginatedResult);
             var controller = new CountryController(_countryServiceMock.Object);
 
             var result = (await controller.Get(null)).Result as OkObjectResult;
@@ -33,8 +36,8 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Controllers
             _countryServiceMock.Verify(c => c.GetCountries(null), Times.Once);
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(StatusCodes.Status200OK);
-            result.Value.Should().BeOfType<List<Country>>();
-            result.Value.Should().Be(_countryListFixture.Countries);
+            result.Value.Should().BeOfType<PaginatedResult>();
+            result.Value.Should().Be(paginatedResult);
         }
     }
 }

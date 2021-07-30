@@ -121,7 +121,7 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Client
             var result = await countryClient.GetCountries();
 
             result.Should().BeOfType<List<Country>>();
-            result.Should().HaveCount(10);
+            result.Should().HaveCount(100);
             _httpMessageHandlerMock.Protected().Verify(
                 "SendAsync",
                 Times.Exactly(1),

@@ -19,9 +19,8 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
         [Fact]
         public void Get_ReturnsNull()
         {
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var simpleCache = new SimpleCacheService<List<Country>>(memoryCache);
-            var result = simpleCache.Get("test");
+            var simpleCache = new SimpleCacheService<List<Country>>();
+            var result = simpleCache.Get("test1");
 
             result.Should().BeNull();
         }
@@ -29,9 +28,8 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
         [Fact]
         public void Set_ReturnsTrue()
         {
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var simpleCache = new SimpleCacheService<List<Country>>(memoryCache);
-            var setResult = simpleCache.Set("test", _countryListFixture.Countries);
+            var simpleCache = new SimpleCacheService<List<Country>>();
+            var setResult = simpleCache.Set("test2", _countryListFixture.Countries);
 
             setResult.Should().BeTrue();
         }
@@ -39,13 +37,12 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
         [Fact]
         public void Set_ReturnsFalse()
         {
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var simpleCache = new SimpleCacheService<List<Country>>(memoryCache);
-            var setResult = simpleCache.Set("test", _countryListFixture.Countries);
+            var simpleCache = new SimpleCacheService<List<Country>>();
+            var setResult = simpleCache.Set("test3", _countryListFixture.Countries);
 
             setResult.Should().BeTrue();
 
-            var setResult2 = simpleCache.Set("test", _countryListFixture.Countries);
+            var setResult2 = simpleCache.Set("test3", _countryListFixture.Countries);
 
             setResult2.Should().BeFalse();
         }
@@ -53,16 +50,15 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
         [Fact]
         public void Get_ReturnsCountries()
         {
-            var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            var simpleCache = new SimpleCacheService<List<Country>>(memoryCache);
-            var setResult = simpleCache.Set("test", _countryListFixture.Countries);
+            var simpleCache = new SimpleCacheService<List<Country>>();
+            var setResult = simpleCache.Set("test4", _countryListFixture.Countries);
 
             setResult.Should().BeTrue();
 
-            var result = simpleCache.Get("test");
+            var result = simpleCache.Get("test4");
 
             result.Should().BeOfType<List<Country>>();
-            result.Should().HaveCount(10);
+            result.Should().HaveCount(100);
         }
     }
 }

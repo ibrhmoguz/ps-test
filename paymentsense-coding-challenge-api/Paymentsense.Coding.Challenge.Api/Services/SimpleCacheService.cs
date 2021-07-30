@@ -5,27 +5,26 @@ namespace Paymentsense.Coding.Challenge.Api.Services
 {
     public class SimpleCacheService<T> : ISimpleCache<T>
     {
-        private readonly IMemoryCache _memoryCache;
+        private static readonly IMemoryCache MemoryCache = new MemoryCache(new MemoryCacheOptions());
 
-        public SimpleCacheService(IMemoryCache memoryCache)
+        public SimpleCacheService()
         {
-            _memoryCache = memoryCache;
         }
 
         public T Get(object key)
         {
-            _memoryCache.TryGetValue(key, out T entry);
+            MemoryCache.TryGetValue(key, out T entry);
             return entry;
         }
 
         public bool Set(object key, T entry)
         {
-            if (_memoryCache.TryGetValue(key, out _))
+            if (MemoryCache.TryGetValue(key, out _))
             {
                 return false;
             }
 
-            _memoryCache.Set(key, entry);
+            MemoryCache.Set(key, entry);
             return true;
         }
     }

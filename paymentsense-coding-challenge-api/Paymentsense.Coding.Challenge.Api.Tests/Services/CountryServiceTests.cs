@@ -30,7 +30,8 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
 
             var result = await countryService.GetCountries(null);
 
-            result.Should().BeNull();
+            result.Should().BeOfType<PaginatedResult>();
+            result.Countries.Should().BeNull();
         }
 
         [Fact]
@@ -42,7 +43,8 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
 
             var result = await countryService.GetCountries(null);
 
-            result.Should().BeNull();
+            result.Should().BeOfType<PaginatedResult>();
+            result.Countries.Should().BeNull();
         }
 
         [Fact]
@@ -54,8 +56,9 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
 
             var result = await countryService.GetCountries(null);
 
-            result.Should().BeOfType<List<Country>>();
-            result.Should().HaveCount(10);
+            result.Should().BeOfType<PaginatedResult>();
+            result.Countries.Should().BeOfType<List<Country>>();
+            result.Countries.Should().HaveCount(100);
             _countryClientMock.Verify(c => c.GetCountries(), Times.Once);
             _simpleCacheMock.Verify(c => c.Get(It.IsAny<string>()), Times.Once);
         }
@@ -68,8 +71,9 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
 
             var result = await countryService.GetCountries(null);
 
-            result.Should().BeOfType<List<Country>>();
-            result.Should().HaveCount(10);
+            result.Should().BeOfType<PaginatedResult>();
+            result.Countries.Should().BeOfType<List<Country>>();
+            result.Countries.Should().HaveCount(100);
             _countryClientMock.Verify(c => c.GetCountries(), Times.Never);
             _simpleCacheMock.Verify(c => c.Get(It.IsAny<string>()), Times.Once);
         }
@@ -80,10 +84,11 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
             _simpleCacheMock.Setup(x => x.Get(It.IsAny<string>())).Returns(() => _countryListFixture.Countries);
             var countryService = new CountryService(_countryClientMock.Object, _simpleCacheMock.Object);
 
-            var result = await countryService.GetCountries(new PageInfo());
+            var result = await countryService.GetCountries(new PageInfo() { PageSize = 20 });
 
-            result.Should().BeOfType<List<Country>>();
-            result.Should().HaveCount(1);
+            result.Should().BeOfType<PaginatedResult>();
+            result.Countries.Should().BeOfType<List<Country>>();
+            result.Countries.Should().HaveCount(20);
             _countryClientMock.Verify(c => c.GetCountries(), Times.Never);
             _simpleCacheMock.Verify(c => c.Get(It.IsAny<string>()), Times.Once);
         }
@@ -98,12 +103,15 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
             var result = await countryService.GetCountries(new PageInfo { Page = 2, PageSize = 2 });
             var nextResult = await countryService.GetCountries(new PageInfo { Page = 3, PageSize = 2 });
 
-            prevResult.Should().BeOfType<List<Country>>();
-            prevResult.Should().HaveCount(2);
-            result.Should().BeOfType<List<Country>>();
-            result.Should().HaveCount(2);
-            nextResult.Should().BeOfType<List<Country>>();
-            nextResult.Should().HaveCount(2);
+            prevResult.Should().BeOfType<PaginatedResult>();
+            prevResult.Countries.Should().BeOfType<List<Country>>();
+            prevResult.Countries.Should().HaveCount(2);
+            result.Should().BeOfType<PaginatedResult>();
+            result.Countries.Should().BeOfType<List<Country>>();
+            result.Countries.Should().HaveCount(2);
+            nextResult.Should().BeOfType<PaginatedResult>();
+            nextResult.Countries.Should().BeOfType<List<Country>>();
+            nextResult.Countries.Should().HaveCount(2);
             _countryClientMock.Verify(c => c.GetCountries(), Times.Never);
             _simpleCacheMock.Verify(c => c.Get(It.IsAny<string>()), Times.Exactly(3));
         }

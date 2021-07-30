@@ -18,8 +18,8 @@ namespace Paymentsense.Coding.Challenge.Api.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<ActionResult<List<Country>>> Get(PageInfo pageInfo)
+        [HttpGet, Route("List")]
+        public async Task<ActionResult<PaginatedResult>> Get([FromQuery]PageInfo pageInfo)
         {
             var countryList = await _countryService.GetCountries(pageInfo);
 

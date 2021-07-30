@@ -18,7 +18,7 @@ namespace Paymentsense.Coding.Challenge.Api.Services
             _simpleCache = simpleCache;
         }
 
-        public async Task<List<Country>> GetCountries(PageInfo pageInfo)
+        public async Task<PaginatedResult> GetCountries(PageInfo pageInfo)
         {
             var countries = _simpleCache.Get(CountryKey);
             if (countries == null)
@@ -30,22 +30,27 @@ namespace Paymentsense.Coding.Challenge.Api.Services
                 }
                 else
                 {
-                    return null;
+                    return new PaginatedResult { PageSize = 0, Page = 1, Countries = null };
                 }
             }
 
             if (pageInfo == null)
             {
-                return countries;
+                return new PaginatedResult { PageSize = 10, Page = 1, Countries = countries, Total = countries.Count };
             }
+            
+            var skipCount = pageInfo.Page * pageInfo.PageSize;
+            var result = pageInfo.Page == 1
+                ? countries.Take(pageInfo.PageSize).ToList()
+                : countries.Skip(skipCount).Take(pageInfo.PageSize).ToList();
 
-            pageInfo.Page ??= 1;
-            pageInfo.PageSize ??= 1;
-
-            var skipCount = pageInfo.Page.Value * pageInfo.PageSize.Value;
-            return pageInfo.Page == 1
-                ? countries.Take(pageInfo.PageSize.Value).ToList()
-                : countries.Skip(skipCount).Take(pageInfo.PageSize.Value).ToList();
+            return new PaginatedResult
+            {
+                PageSize = pageInfo.PageSize,
+                Page = pageInfo.Page,
+                Countries = result,
+                Total = countries.Count
+            };
         }
     }
 }

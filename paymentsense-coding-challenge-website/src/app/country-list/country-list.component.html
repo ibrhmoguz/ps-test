@@ -1,0 +1,81 @@
+<div *ngIf="loading">
+  <div
+    class="col-md-12 text-center"
+    *ngIf="paginatedResult?.countries?.length === 0"
+  >
+    <p>Loading...</p>
+  </div>
+</div>
+<div>
+  <div>
+    <div
+      class="col-md-12 text-center"
+      *ngIf="paginatedResult?.countries?.length === 0"
+    >
+      <p>No country found</p>
+    </div>
+  </div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="countryList" multiTemplateDataRows>
+      <!-- Flag Column -->
+      <ng-container matColumnDef="flag">
+        <th mat-header-cell *matHeaderCellDef>Flag</th>
+        <td mat-cell *matCellDef="let element">
+          <img style="width: 40px;" [src]="element.flag" alt="flag" />
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <!-- Expanded Country fields -->
+      <ng-container matColumnDef="expandedDetail">
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [attr.colspan]="columnsToDisplay.length"
+        >
+          <div
+            class="country-element-detail"
+            [@detailExpand]="
+              element == expandedElement ? 'expanded' : 'collapsed'
+            "
+          >
+            <div class="country-element-description">
+              <strong>Population: </strong> {{ element.population }}
+              <strong>Timezones: </strong> {{ element.timezones?.join() }}
+              <strong>Currencies: </strong>
+              {{ getCurrencies(element.currencies) }}
+              <strong>Languages: </strong>
+              {{ getLanguages(element.languages) }} <strong>Capital: </strong>
+              {{ element.capital }}
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr
+        mat-row
+        *matRowDef="let element; columns: columnsToDisplay"
+        class="country-element-row"
+        [class.country-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDetail']"
+        class="country-detail-row"
+      ></tr>
+    </table>
+    <mat-paginator #paginator
+      [pageSize]="10"
+      [length]="paginatedResult?.total"
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      (page)="pageChanged($event)"
+    ></mat-paginator>
+  </div>
+</div>

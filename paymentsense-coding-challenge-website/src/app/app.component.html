@@ -1,11 +1,27 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <img width="50%" alt="Paymentsense Logo" src="../assets/paymentsense-logo.svg">
+<div style="text-align: center;">
+  <img
+    width="50%"
+    alt="Paymentsense Logo"
+    src="../assets/paymentsense-logo.svg"
+  />
   <h1>
     {{ title }}
   </h1>
-  <h2>... Paymentsense Coding Challenge API is <fa-icon [icon]=paymentsenseCodingChallengeApiActiveIcon
-                                                        [styles]="{ 'stroke': paymentsenseCodingChallengeApiActiveIconColour, 'color': paymentsenseCodingChallengeApiActiveIconColour }"></fa-icon> ...</h2>
+  <h2>
+    ... Paymentsense Coding Challenge API is
+    <fa-icon
+      [icon]="paymentsenseCodingChallengeApiActiveIcon"
+      [styles]="{
+        stroke: paymentsenseCodingChallengeApiActiveIconColour,
+        color: paymentsenseCodingChallengeApiActiveIconColour
+      }"
+    ></fa-icon>
+    ...
+  </h2>
+
+  <hr />
+  <country-list></country-list>
 </div>
 
 <router-outlet></router-outlet>
